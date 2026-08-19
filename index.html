@@ -1,0 +1,2303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Little Quest 💜</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@400;500;600;700&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+
+    background:
+        radial-gradient(circle at 20% 20%, #8062c9, transparent 30%),
+        radial-gradient(circle at 80% 80%, #bd6b9f, transparent 30%),
+        #120d20;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: 'Poppins', sans-serif;
+    color: white;
+
+    overflow: hidden;
+}
+
+/* =====================================================
+   GAME WINDOW
+===================================================== */
+
+.game-window {
+    width: min(1100px, 96vw);
+    height: min(720px, 94vh);
+
+    background: #21162f;
+
+    border: 5px solid #08050d;
+    border-radius: 20px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 12px 0 #08050d,
+        0 25px 60px rgba(0,0,0,.5);
+
+    position: relative;
+}
+
+/* =====================================================
+   TOP HUD
+===================================================== */
+
+.hud {
+    height: 65px;
+
+    background: #2d2040;
+
+    border-bottom: 4px solid #100a18;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 20px;
+
+    position: relative;
+    z-index: 20;
+}
+
+.logo {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 12px;
+    color: #eadcff;
+}
+
+.stats {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.stat {
+    background: #160f22;
+
+    border: 2px solid #70528d;
+
+    padding: 8px 12px;
+
+    border-radius: 7px;
+
+    font-size: 11px;
+}
+
+.music-button {
+    border: 2px solid #b78be8;
+
+    background: #513875;
+
+    color: white;
+
+    border-radius: 8px;
+
+    padding: 8px 11px;
+
+    cursor: pointer;
+
+    font-size: 14px;
+}
+
+/* =====================================================
+   SCREENS
+===================================================== */
+
+.screen {
+    position: absolute;
+
+    top: 65px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    display: none;
+}
+
+.screen.active {
+    display: flex;
+}
+
+/* =====================================================
+   START SCREEN
+===================================================== */
+
+.start-screen {
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    padding: 30px;
+
+    background:
+        linear-gradient(
+            rgba(27,18,43,.85),
+            rgba(27,18,43,.95)
+        ),
+        radial-gradient(
+            circle,
+            #8060aa,
+            #1c1228
+        );
+}
+
+.start-heart {
+    font-size: 80px;
+
+    animation: float 2s ease-in-out infinite;
+}
+
+@keyframes float {
+
+    0%,100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-12px);
+    }
+}
+
+.start-title {
+    font-family: 'Press Start 2P', cursive;
+
+    font-size: clamp(20px, 3vw, 34px);
+
+    line-height: 1.7;
+
+    margin: 25px 0 15px;
+
+    text-shadow: 4px 4px #58377d;
+}
+
+.start-subtitle {
+    max-width: 550px;
+
+    color: #d7c9e5;
+
+    font-size: 14px;
+
+    line-height: 1.8;
+
+    margin-bottom: 30px;
+}
+
+.game-button {
+    border: 3px solid #0b0710;
+
+    background: #9461dc;
+
+    color: white;
+
+    padding: 15px 25px;
+
+    border-radius: 9px;
+
+    font-family: 'Press Start 2P', cursive;
+
+    font-size: 10px;
+
+    cursor: pointer;
+
+    box-shadow: 0 6px #51337e;
+
+    transition: .15s;
+}
+
+.game-button:hover {
+    background: #aa7bea;
+
+    transform: translateY(-2px);
+}
+
+.game-button:active {
+    transform: translateY(4px);
+
+    box-shadow: 0 2px #51337e;
+}
+
+/* =====================================================
+   CHARACTER SELECTION
+===================================================== */
+
+.select-screen {
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    background: #21162f;
+
+    padding: 30px;
+}
+
+.pixel-heading {
+    font-family: 'Press Start 2P', cursive;
+
+    font-size: 18px;
+
+    margin-bottom: 12px;
+
+    color: #ecdfff;
+}
+
+.select-description {
+    color: #bfb1cc;
+
+    font-size: 13px;
+
+    margin-bottom: 30px;
+}
+
+.characters {
+    display: flex;
+
+    gap: 25px;
+
+    margin-bottom: 30px;
+}
+
+.character-choice {
+    width: 130px;
+    height: 160px;
+
+    border: 3px solid #5b4170;
+
+    background: #30203f;
+
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    padding: 15px;
+
+    transition: .2s;
+}
+
+.character-choice:hover {
+    transform: translateY(-8px);
+
+    border-color: #bd8df0;
+
+    background: #3b2850;
+}
+
+.character-choice.selected {
+    border-color: #d9a6ff;
+
+    box-shadow:
+        0 0 20px rgba(205,150,255,.35);
+}
+
+.avatar {
+    width: 75px;
+    height: 75px;
+
+    border-radius: 15px;
+
+    background: #d4a8ff;
+
+    border: 3px solid #100b15;
+
+    margin: 0 auto 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 40px;
+}
+
+.character-name {
+    font-family: 'Press Start 2P', cursive;
+
+    font-size: 8px;
+
+    color: #e8d9f5;
+}
+
+/* =====================================================
+   GAME WORLD
+===================================================== */
+
+.world-screen {
+    background: #17291d;
+
+    justify-content: center;
+    align-items: center;
+}
+
+.world {
+    width: 100%;
+    height: 100%;
+
+    position: relative;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.025) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            rgba(255,255,255,.025) 1px,
+            transparent 1px
+        ),
+        #315b3b;
+
+    background-size: 40px 40px;
+}
+
+/* =====================================================
+   GRASS
+===================================================== */
+
+.grass {
+    position: absolute;
+
+    width: 55px;
+    height: 55px;
+
+    background: #397045;
+
+    border-radius: 8px;
+}
+
+.g1 {
+    top: 10%;
+    left: 8%;
+}
+
+.g2 {
+    top: 25%;
+    left: 70%;
+}
+
+.g3 {
+    top: 70%;
+    left: 12%;
+}
+
+.g4 {
+    top: 65%;
+    left: 78%;
+}
+
+.g5 {
+    top: 15%;
+    left: 43%;
+}
+
+.g6 {
+    top: 78%;
+    left: 48%;
+}
+
+/* =====================================================
+   ROCKS
+===================================================== */
+
+.rock {
+    position: absolute;
+
+    width: 35px;
+    height: 25px;
+
+    background: #53645a;
+
+    border-radius: 50%;
+
+    border-bottom: 4px solid #29382e;
+}
+
+.r1 {
+    top: 30%;
+    left: 25%;
+}
+
+.r2 {
+    top: 75%;
+    left: 67%;
+}
+
+.r3 {
+    top: 48%;
+    left: 78%;
+}
+
+/* =====================================================
+   CHESTS
+===================================================== */
+
+.chest {
+    position: absolute;
+
+    width: 55px;
+    height: 45px;
+
+    background: #a9673d;
+
+    border: 4px solid #392018;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    z-index: 5;
+
+    transition: .2s;
+}
+
+.chest::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    top: 10px;
+
+    height: 5px;
+
+    background: #d08b50;
+}
+
+.chest::after {
+    content: "◆";
+
+    position: absolute;
+
+    left: 50%;
+    top: 13px;
+
+    transform: translateX(-50%);
+
+    color: #ffe0a4;
+
+    font-size: 12px;
+}
+
+.chest:hover {
+    transform: scale(1.12);
+}
+
+.chest.opened {
+    background: #624631;
+
+    cursor: default;
+}
+
+.chest1 {
+    left: 18%;
+    top: 22%;
+}
+
+.chest2 {
+    right: 20%;
+    top: 32%;
+}
+
+.chest3 {
+    left: 28%;
+    bottom: 20%;
+}
+
+.final-chest {
+    right: 15%;
+    bottom: 15%;
+
+    width: 70px;
+    height: 55px;
+
+    background: #c39135;
+
+    border-color: #563a12;
+
+    box-shadow:
+        0 0 20px rgba(255,211,95,.6);
+}
+
+/* =====================================================
+   PLAYER
+===================================================== */
+
+.player {
+    width: 45px;
+    height: 55px;
+
+    position: absolute;
+
+    left: 8%;
+    top: 75%;
+
+    z-index: 10;
+
+    transition:
+        left .08s linear,
+        top .08s linear;
+}
+
+.player-body {
+    width: 35px;
+    height: 35px;
+
+    background: #dba9ff;
+
+    border: 3px solid #100b14;
+
+    border-radius: 12px;
+
+    position: absolute;
+
+    left: 5px;
+    top: 5px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 20px;
+}
+
+.player-shadow {
+    width: 40px;
+    height: 10px;
+
+    background: rgba(0,0,0,.3);
+
+    border-radius: 50%;
+
+    position: absolute;
+
+    bottom: 0;
+}
+
+/* =====================================================
+   INSTRUCTIONS
+===================================================== */
+
+.instructions {
+    position: absolute;
+
+    bottom: 15px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    background: rgba(15,10,20,.85);
+
+    border: 2px solid #9c7aaf;
+
+    border-radius: 8px;
+
+    padding: 9px 15px;
+
+    font-size: 10px;
+
+    z-index: 20;
+
+    white-space: nowrap;
+}
+
+/* =====================================================
+   MOBILE CONTROLS
+===================================================== */
+
+.controls {
+    position: absolute;
+
+    bottom: 60px;
+    left: 20px;
+
+    width: 130px;
+    height: 130px;
+
+    display: none;
+
+    z-index: 30;
+}
+
+.control {
+    position: absolute;
+
+    width: 42px;
+    height: 42px;
+
+    border: 2px solid #c6a4dd;
+
+    background: rgba(40,25,55,.8);
+
+    color: white;
+
+    border-radius: 8px;
+
+    font-size: 18px;
+
+    cursor: pointer;
+
+    touch-action: manipulation;
+}
+
+.up {
+    left: 44px;
+    top: 0;
+}
+
+.down {
+    left: 44px;
+    bottom: 0;
+}
+
+.left {
+    left: 0;
+    top: 44px;
+}
+
+.right {
+    right: 0;
+    top: 44px;
+}
+
+/* =====================================================
+   CHALLENGE MODAL
+===================================================== */
+
+.modal {
+    position: absolute;
+
+    inset: 0;
+
+    background: rgba(8,5,12,.8);
+
+    display: none;
+
+    justify-content: center;
+    align-items: center;
+
+    z-index: 50;
+
+    padding: 20px;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.challenge-box {
+    width: min(500px, 95%);
+
+    background: #fff;
+
+    color: #302039;
+
+    border: 5px solid #0c0810;
+
+    border-radius: 15px;
+
+    padding: 30px;
+
+    text-align: center;
+
+    box-shadow: 10px 10px 0 #0c0810;
+}
+
+.challenge-box h2 {
+    font-family: 'Press Start 2P', cursive;
+
+    font-size: 15px;
+
+    color: #7043a8;
+
+    line-height: 1.7;
+
+    margin-bottom: 15px;
+}
+
+.challenge-box p {
+    font-size: 13px;
+
+    line-height: 1.8;
+
+    margin-bottom: 20px;
+}
+
+.challenge-input {
+    width: 100%;
+
+    padding: 12px;
+
+    border: 2px solid #d8c8e5;
+
+    border-radius: 8px;
+
+    outline: none;
+
+    font-family: Poppins, sans-serif;
+
+    margin-bottom: 15px;
+}
+
+.challenge-input:focus {
+    border-color: #9461dc;
+
+    box-shadow:
+        0 0 0 3px rgba(148,97,220,.15);
+}
+
+.challenge-message {
+    font-size: 11px;
+
+    color: #9b4d75;
+
+    min-height: 20px;
+
+    margin-bottom: 10px;
+}
+
+/* =====================================================
+   FINAL SCREEN
+===================================================== */
+
+.final-screen {
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    padding: 30px;
+
+    background:
+        radial-gradient(
+            circle at center,
+            #70458c,
+            #1e1329
+        );
+}
+
+.final-screen .final-chest {
+    position: relative;
+
+    right: auto;
+    bottom: auto;
+
+    margin-bottom: 30px;
+
+    transform: scale(1.5);
+
+    animation: chestGlow 1.5s infinite alternate;
+}
+
+@keyframes chestGlow {
+
+    from {
+        box-shadow:
+            0 0 15px #ffd05a;
+    }
+
+    to {
+        box-shadow:
+            0 0 50px #ffd05a,
+            0 0 80px #bd78ff;
+    }
+}
+
+.final-title {
+    font-family: 'Press Start 2P', cursive;
+
+    font-size: 18px;
+
+    line-height: 1.7;
+
+    margin-bottom: 20px;
+}
+
+.final-description {
+    max-width: 500px;
+
+    color: #ded1e8;
+
+    line-height: 1.8;
+
+    font-size: 13px;
+
+    margin-bottom: 25px;
+}
+
+/* =====================================================
+   CONFESSION
+===================================================== */
+
+.confession-screen {
+    justify-content: center;
+    align-items: center;
+
+    padding: 25px;
+
+    background:
+        radial-gradient(
+            circle,
+            #704d88,
+            #21132c
+        );
+}
+
+.confession-card {
+    max-width: 680px;
+
+    max-height: 85%;
+
+    overflow-y: auto;
+
+    background: #fff;
+
+    color: #34233f;
+
+    border: 5px solid #0b0710;
+
+    border-radius: 18px;
+
+    padding: 35px;
+
+    box-shadow:
+        10px 10px 0 #0b0710;
+
+    text-align: left;
+
+    animation: reveal .8s ease;
+}
+
+@keyframes reveal {
+
+    from {
+        opacity: 0;
+
+        transform:
+            scale(.8)
+            translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            scale(1)
+            translateY(0);
+    }
+}
+
+.confession-label {
+    font-family: 'Press Start 2P', cursive;
+
+    color: #8752b4;
+
+    font-size: 9px;
+
+    margin-bottom: 20px;
+}
+
+.confession-card h1 {
+    font-size: 25px;
+
+    margin-bottom: 20px;
+
+    color: #392343;
+}
+
+.confession-text {
+    font-size: 14px;
+
+    line-height: 2;
+
+    color: #5c4c65;
+
+    white-space: pre-line;
+}
+
+.signature {
+    margin-top: 25px;
+
+    text-align: right;
+
+    color: #8752b4;
+
+    font-style: italic;
+
+    font-weight: 600;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width: 700px) {
+
+    body {
+        align-items: center;
+    }
+
+    .game-window {
+        width: 96vw;
+
+        height: 90vh;
+
+        border-width: 3px;
+    }
+
+    .logo {
+        font-size: 8px;
+    }
+
+    .stats {
+        gap: 5px;
+    }
+
+    .stat {
+        padding: 6px;
+
+        font-size: 8px;
+    }
+
+    .characters {
+        gap: 12px;
+    }
+
+    .character-choice {
+        width: 105px;
+
+        height: 140px;
+    }
+
+    .avatar {
+        width: 60px;
+
+        height: 60px;
+
+        font-size: 30px;
+    }
+
+    .controls {
+        display: block;
+    }
+
+    .instructions {
+        display: none;
+    }
+
+    .confession-card {
+        padding: 25px;
+    }
+
+    .confession-card h1 {
+        font-size: 20px;
+    }
+
+    .confession-text {
+        font-size: 12px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="game-window">
+
+    <!-- =================================================
+         HUD
+    ================================================== -->
+
+    <div class="hud">
+
+        <div class="logo">
+            OUR LITTLE QUEST
+        </div>
+
+        <div class="stats">
+
+            <div class="stat" id="chestCounter">
+                CHESTS 0/4
+            </div>
+
+            <div class="stat">
+                ❤️
+            </div>
+
+            <button
+                class="music-button"
+                onclick="toggleMusic()"
+                id="musicButton"
+            >
+                🔇
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         START SCREEN
+    ================================================== -->
+
+    <section
+        class="screen start-screen active"
+        id="startScreen"
+    >
+
+        <div class="start-heart">
+            💌
+        </div>
+
+        <h1 class="start-title">
+            A QUEST<br>
+            FOR YOU
+        </h1>
+
+        <p class="start-subtitle">
+
+            Hi aki, i have something
+            <br><br>
+             for you
+
+            <br><br>
+            But before that you must
+            <br><br>
+
+            Find the chests.
+            <br><br>
+            Complete the challenges.
+            <br><br>
+            Reach the final chest.
+
+            <br><br>
+
+            Something is waiting for you.
+            <br><br>
+            I love you baby🌷
+
+        </p>
+
+        <button
+            class="game-button"
+            onclick="showScreen('selectScreen')"
+        >
+            ▶ START GAME
+        </button>
+
+    </section>
+
+
+    <!-- =================================================
+         CHARACTER SELECT
+    ================================================== -->
+
+    <section
+        class="screen select-screen"
+        id="selectScreen"
+    >
+
+        <h2 class="pixel-heading">
+            CHOOSE YOUR PLAYER
+        </h2>
+
+        <p class="select-description">
+            Pick whoever you want to be on this little adventure.
+        </p>
+
+        <div class="characters">
+
+            <div
+                class="character-choice selected"
+                onclick="selectCharacter(this, '👩🏻')"
+            >
+
+                <div class="avatar">
+                    👩🏻
+                </div>
+
+                <div class="character-name">
+                    MY BABY
+                </div>
+
+            </div>
+
+
+            <div
+                class="character-choice"
+                onclick="selectCharacter(this, '👩🏻‍🦰')"
+            >
+
+                <div class="avatar">
+                    👩🏻‍🦰
+                </div>
+
+                <div class="character-name">
+                    OTHER PLAYER
+                </div>
+
+            </div>
+
+        </div>
+
+        <button
+            class="game-button"
+            onclick="startWorld()"
+        >
+            ENTER WORLD →
+        </button>
+
+    </section>
+
+
+    <!-- =================================================
+         GAME WORLD
+    ================================================== -->
+
+    <section
+        class="screen world-screen"
+        id="worldScreen"
+    >
+
+        <div
+            class="world"
+            id="world"
+        >
+
+            <!-- GRASS -->
+
+            <div class="grass g1"></div>
+            <div class="grass g2"></div>
+            <div class="grass g3"></div>
+            <div class="grass g4"></div>
+            <div class="grass g5"></div>
+            <div class="grass g6"></div>
+
+
+            <!-- ROCKS -->
+
+            <div class="rock r1"></div>
+            <div class="rock r2"></div>
+            <div class="rock r3"></div>
+
+
+            <!-- CHEST 1 -->
+
+            <div
+                class="chest chest1"
+                id="chest1"
+                onclick="openChest(1)"
+            ></div>
+
+
+            <!-- CHEST 2 -->
+
+            <div
+                class="chest chest2"
+                id="chest2"
+                onclick="openChest(2)"
+            ></div>
+
+
+            <!-- CHEST 3 -->
+
+            <div
+                class="chest chest3"
+                id="chest3"
+                onclick="openChest(3)"
+            ></div>
+
+
+            <!-- FINAL CHEST -->
+
+            <div
+                class="chest final-chest"
+                id="finalChest"
+                onclick="openFinalChest()"
+            ></div>
+
+
+            <!-- PLAYER -->
+
+            <div
+                class="player"
+                id="player"
+            >
+
+                <div
+                    class="player-body"
+                    id="playerBody"
+                >
+                    👩🏻
+                </div>
+
+                <div class="player-shadow"></div>
+
+            </div>
+
+
+            <!-- INSTRUCTIONS -->
+
+            <div class="instructions">
+                WASD / ARROW KEYS — MOVE • FIND THE CHESTS
+            </div>
+
+
+            <!-- MOBILE CONTROLS -->
+
+            <div class="controls">
+
+                <button
+                    class="control up"
+                    onpointerdown="movePlayer(0,-1)"
+                >
+                    ▲
+                </button>
+
+                <button
+                    class="control down"
+                    onpointerdown="movePlayer(0,1)"
+                >
+                    ▼
+                </button>
+
+                <button
+                    class="control left"
+                    onpointerdown="movePlayer(-1,0)"
+                >
+                    ◀
+                </button>
+
+                <button
+                    class="control right"
+                    onpointerdown="movePlayer(1,0)"
+                >
+                    ▶
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             CHALLENGE MODAL
+        ================================================== -->
+
+        <div
+            class="modal"
+            id="challengeModal"
+        >
+
+            <div class="challenge-box">
+
+                <h2 id="challengeTitle">
+                    QUEST
+                </h2>
+
+                <p id="challengeQuestion">
+                    Challenge
+                </p>
+
+                <input
+                    class="challenge-input"
+                    id="challengeInput"
+                    type="text"
+                    placeholder="Type your answer..."
+                    autocomplete="off"
+                >
+
+                <div
+                    class="challenge-message"
+                    id="challengeMessage"
+                ></div>
+
+                <button
+                    class="game-button"
+                    onclick="submitChallenge()"
+                >
+                    SUBMIT ANSWER
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         FINAL CHEST SCREEN
+    ================================================== -->
+
+    <section
+        class="screen final-screen"
+        id="finalScreen"
+    >
+
+        <div class="chest final-chest"></div>
+
+        <h1 class="final-title">
+
+            THE FINAL CHEST
+
+            <br>
+
+            HAS BEEN FOUND
+
+        </h1>
+
+        <p class="final-description">
+
+            You made it all the way here.
+
+            <br><br>
+
+            There is only one thing left to do.
+
+        </p>
+
+        <button
+            class="game-button"
+            onclick="showScreen('confessionScreen')"
+        >
+            OPEN CHEST ✦
+        </button>
+
+    </section>
+
+
+    <!-- =================================================
+         CONFESSION
+    ================================================== -->
+
+    <section
+        class="screen confession-screen"
+        id="confessionScreen"
+    >
+
+        <div class="confession-card">
+
+            <div class="confession-label">
+                ✦ FINAL QUEST COMPLETE ✦
+            </div>
+
+            <h1>
+                To You, 💜
+            </h1>
+
+            <p class="confession-text">
+
+Okay...
+
+You made it.
+
+And honestly, I hope you don't laugh at me
+for making an entire game just to tell you this.
+
+I've been wanting to say something for a while.
+
+I don't really know exactly when it happened,
+but somewhere along the way,
+you became someone really special to me.
+
+I like talking to you.
+
+I like spending time with you.
+
+I like the little moments,
+the random conversations,
+the things that probably seem small
+but somehow stay in my head.
+
+And maybe I could have just sent you
+a normal message.
+
+But where's the fun in that?
+
+So I made you a quest instead.
+
+And this...
+
+this is the final level.
+
+I like you. ❤️
+
+I don't expect you to have
+the perfect answer right now.
+
+I just wanted you to know
+how I feel.
+
+Whatever happens after this,
+thank you for playing my little game.
+
+And thank you for being
+someone worth making it for.
+
+            </p>
+
+            <div class="signature">
+                — From someone who really likes you
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         MUSIC
+    ================================================== -->
+
+    <audio
+        id="backgroundMusic"
+        loop
+        preload="auto"
+    >
+        <source
+            src="love is.mp3"
+            type="audio/mpeg"
+        >
+    </audio>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   SCREEN SYSTEM
+===================================================== */
+
+function showScreen(id) {
+
+    document
+        .querySelectorAll('.screen')
+        .forEach(screen => {
+
+            screen.classList.remove('active');
+
+        });
+
+    const target =
+        document.getElementById(id);
+
+    if (target) {
+
+        target.classList.add('active');
+
+    }
+}
+
+
+/* =====================================================
+   CHARACTER SYSTEM
+===================================================== */
+
+let selectedCharacter = "👩🏻";
+
+function selectCharacter(element, character) {
+
+    document
+        .querySelectorAll('.character-choice')
+        .forEach(choice => {
+
+            choice.classList.remove('selected');
+
+        });
+
+    element.classList.add('selected');
+
+    selectedCharacter = character;
+}
+
+
+/* =====================================================
+   START GAME
+===================================================== */
+
+function startWorld() {
+
+    document
+        .getElementById('playerBody')
+        .textContent = selectedCharacter;
+
+    showScreen('worldScreen');
+}
+
+
+/* =====================================================
+   PLAYER MOVEMENT
+===================================================== */
+
+const player =
+    document.getElementById('player');
+
+let playerX = 8;
+let playerY = 75;
+
+const speed = 2;
+
+function movePlayer(x, y) {
+
+    if (
+        !document
+            .getElementById('worldScreen')
+            .classList
+            .contains('active')
+    ) {
+        return;
+    }
+
+    /* Don't move while the challenge modal is open */
+
+    if (
+        document
+            .getElementById('challengeModal')
+            .classList
+            .contains('show')
+    ) {
+        return;
+    }
+
+    playerX += x * speed;
+
+    playerY += y * speed;
+
+    playerX =
+        Math.max(
+            3,
+            Math.min(94, playerX)
+        );
+
+    playerY =
+        Math.max(
+            5,
+            Math.min(88, playerY)
+        );
+
+    player.style.left =
+        playerX + "%";
+
+    player.style.top =
+        playerY + "%";
+
+    checkChestProximity();
+}
+
+
+/* =====================================================
+   KEYBOARD CONTROLS
+===================================================== */
+
+document.addEventListener(
+    'keydown',
+    function(event) {
+
+        /*
+         IMPORTANT FIX:
+
+         If the user is typing inside an input,
+         don't use A/S/W/D for movement.
+        */
+
+        const activeElement =
+            document.activeElement;
+
+        if (
+            activeElement &&
+            (
+                activeElement.tagName === 'INPUT' ||
+                activeElement.tagName === 'TEXTAREA' ||
+                activeElement.isContentEditable
+            )
+        ) {
+            return;
+        }
+
+
+        /* Only work inside the game world */
+
+        if (
+            !document
+                .getElementById('worldScreen')
+                .classList
+                .contains('active')
+        ) {
+            return;
+        }
+
+
+        /* Don't move while challenge is open */
+
+        if (
+            document
+                .getElementById('challengeModal')
+                .classList
+                .contains('show')
+        ) {
+            return;
+        }
+
+
+        switch (
+            event.key.toLowerCase()
+        ) {
+
+            case 'arrowup':
+            case 'w':
+
+                event.preventDefault();
+
+                movePlayer(0, -1);
+
+                break;
+
+
+            case 'arrowdown':
+            case 's':
+
+                event.preventDefault();
+
+                movePlayer(0, 1);
+
+                break;
+
+
+            case 'arrowleft':
+            case 'a':
+
+                event.preventDefault();
+
+                movePlayer(-1, 0);
+
+                break;
+
+
+            case 'arrowright':
+            case 'd':
+
+                event.preventDefault();
+
+                movePlayer(1, 0);
+
+                break;
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   CHEST SYSTEM
+===================================================== */
+
+let openedChests = 0;
+
+let currentChallenge = 0;
+
+let chestCooldown = false;
+
+
+/* =====================================================
+   CHALLENGES
+===================================================== */
+
+const challenges = {
+
+    1: {
+
+        title: "CHEST #1",
+
+        question:
+            "Warm-up quest: When did we start talking?",
+
+        answer:
+            "May 25"
+
+    },
+
+
+    2: {
+
+        title: "CHEST #2",
+
+        question:
+            "You remember? edi wow HAHAHAH. Now who's your favorite person?",
+
+        answer:
+            "Sheena"
+
+    },
+
+
+    3: {
+
+        title: "CHEST #3",
+
+        question:
+            "Well I'm the only answer baby, for the final question: baby do you love me?",
+
+        answer:
+            "yes"
+
+    }
+
+};
+
+
+/* =====================================================
+   CHEST PROXIMITY
+===================================================== */
+
+function checkChestProximity() {
+
+    if (chestCooldown) {
+        return;
+    }
+
+    const chests = [
+
+        {
+            id: "chest1",
+            x: 18,
+            y: 22
+        },
+
+        {
+            id: "chest2",
+            x: 80,
+            y: 32
+        },
+
+        {
+            id: "chest3",
+            x: 28,
+            y: 80
+        },
+
+        {
+            id: "finalChest",
+            x: 85,
+            y: 80
+        }
+
+    ];
+
+
+    for (
+        const chest of chests
+    ) {
+
+        const distance =
+            Math.sqrt(
+                Math.pow(
+                    playerX - chest.x,
+                    2
+                ) +
+                Math.pow(
+                    playerY - chest.y,
+                    2
+                )
+            );
+
+
+        if (distance < 9) {
+
+            /* FINAL CHEST */
+
+            if (
+                chest.id ===
+                "finalChest"
+            ) {
+
+                if (
+                    openedChests >= 3
+                ) {
+
+                    openFinalChest();
+
+                }
+
+                return;
+            }
+
+
+            /* NORMAL CHESTS */
+
+            const number =
+                parseInt(
+                    chest.id
+                        .replace(
+                            "chest",
+                            ""
+                        )
+                );
+
+            openChest(number);
+
+            return;
+        }
+
+    }
+
+}
+
+
+/* =====================================================
+   OPEN CHEST
+===================================================== */
+
+function openChest(number) {
+
+    const chest =
+        document.getElementById(
+            "chest" + number
+        );
+
+
+    if (!chest) {
+        return;
+    }
+
+
+    /* Already opened */
+
+    if (
+        chest.classList
+            .contains('opened')
+    ) {
+        return;
+    }
+
+
+    /* Must complete chests in order */
+
+    if (
+        number >
+        openedChests + 1
+    ) {
+
+        showTemporaryMessage(
+            "You need to complete the previous chest first!"
+        );
+
+        chestCooldown = true;
+
+        setTimeout(
+            () => {
+                chestCooldown = false;
+            },
+            1000
+        );
+
+        return;
+    }
+
+
+    currentChallenge = number;
+
+
+    document
+        .getElementById(
+            'challengeTitle'
+        )
+        .textContent =
+        challenges[number]
+            .title;
+
+
+    document
+        .getElementById(
+            'challengeQuestion'
+        )
+        .textContent =
+        challenges[number]
+            .question;
+
+
+    document
+        .getElementById(
+            'challengeInput'
+        )
+        .value = "";
+
+
+    document
+        .getElementById(
+            'challengeMessage'
+        )
+        .textContent = "";
+
+
+    document
+        .getElementById(
+            'challengeModal'
+        )
+        .classList
+        .add('show');
+
+
+    setTimeout(
+        () => {
+
+            document
+                .getElementById(
+                    'challengeInput'
+                )
+                .focus();
+
+        },
+        100
+    );
+}
+
+
+/* =====================================================
+   SUBMIT CHALLENGE
+===================================================== */
+
+function submitChallenge() {
+
+    const input =
+        document
+            .getElementById(
+                'challengeInput'
+            )
+            .value
+            .trim()
+            .toLowerCase();
+
+
+    const correct =
+        challenges[
+            currentChallenge
+        ]
+        .answer
+        .trim()
+        .toLowerCase();
+
+
+    if (
+        input === correct
+    ) {
+
+        const chest =
+            document.getElementById(
+                "chest" +
+                currentChallenge
+            );
+
+
+        chest
+            .classList
+            .add("opened");
+
+
+        openedChests++;
+
+
+        document
+            .getElementById(
+                'chestCounter'
+            )
+            .textContent =
+            "CHESTS " +
+            openedChests +
+            "/4";
+
+
+        document
+            .getElementById(
+                'challengeModal'
+            )
+            .classList
+            .remove('show');
+
+
+        chestCooldown = true;
+
+
+        setTimeout(
+            () => {
+
+                chestCooldown = false;
+
+            },
+            1000
+        );
+
+
+        /* All three normal chests complete */
+
+        if (
+            openedChests === 3
+        ) {
+
+            setTimeout(
+                () => {
+
+                    alert(
+                        "✨ ALL THREE QUESTS COMPLETE! ✨\n\n" +
+                        "The final chest has been unlocked."
+                    );
+
+                },
+                300
+            );
+
+        }
+
+    }
+
+    else {
+
+        document
+            .getElementById(
+                'challengeMessage'
+            )
+            .textContent =
+            "Not quite... try again 💜";
+
+    }
+
+}
+
+
+/* =====================================================
+   ENTER KEY FOR ANSWERS
+===================================================== */
+
+document
+    .getElementById(
+        'challengeInput'
+    )
+    .addEventListener(
+        'keydown',
+        function(event) {
+
+            if (
+                event.key === 'Enter'
+            ) {
+
+                event.preventDefault();
+
+                submitChallenge();
+
+            }
+
+        }
+    );
+
+
+/* =====================================================
+   FINAL CHEST
+===================================================== */
+
+let finalOpened = false;
+
+
+function openFinalChest() {
+
+    if (
+        openedChests < 3
+    ) {
+
+        showTemporaryMessage(
+            "Three chests remain to be completed!"
+        );
+
+        return;
+    }
+
+
+    if (finalOpened) {
+        return;
+    }
+
+
+    finalOpened = true;
+
+
+    showScreen(
+        'finalScreen'
+    );
+}
+
+
+/* =====================================================
+   TEMPORARY MESSAGE
+===================================================== */
+
+function showTemporaryMessage(
+    message
+) {
+
+    const oldMessage =
+        document.getElementById(
+            'temporaryMessage'
+        );
+
+
+    if (oldMessage) {
+        oldMessage.remove();
+    }
+
+
+    const messageBox =
+        document.createElement(
+            'div'
+        );
+
+
+    messageBox.id =
+        'temporaryMessage';
+
+
+    messageBox.textContent =
+        message;
+
+
+    messageBox.style.position =
+        'fixed';
+
+    messageBox.style.left =
+        '50%';
+
+    messageBox.style.top =
+        '20%';
+
+    messageBox.style.transform =
+        'translateX(-50%)';
+
+    messageBox.style.background =
+        '#251832';
+
+    messageBox.style.border =
+        '3px solid #a97ad0';
+
+    messageBox.style.borderRadius =
+        '10px';
+
+    messageBox.style.padding =
+        '15px 20px';
+
+    messageBox.style.zIndex =
+        '100';
+
+    messageBox.style.fontSize =
+        '12px';
+
+
+    document.body.appendChild(
+        messageBox
+    );
+
+
+    setTimeout(
+        () => {
+
+            if (
+                messageBox.parentNode
+            ) {
+
+                messageBox.remove();
+
+            }
+
+        },
+        1800
+    );
+}
+
+
+/* =====================================================
+   MUSIC
+===================================================== */
+
+const music =
+    document.getElementById(
+        'backgroundMusic'
+    );
+
+
+let musicPlaying = false;
+
+
+function toggleMusic() {
+
+    if (musicPlaying) {
+
+        music.pause();
+
+        musicPlaying = false;
+
+        document
+            .getElementById(
+                'musicButton'
+            )
+            .textContent =
+            "🔇";
+
+    }
+
+    else {
+
+        music.play()
+
+            .then(
+                () => {
+
+                    musicPlaying =
+                        true;
+
+                    document
+                        .getElementById(
+                            'musicButton'
+                        )
+                        .textContent =
+                        "🎵";
+
+                }
+            )
+
+            .catch(
+                () => {
+
+                    alert(
+                        "Make sure 'love is.mp3' is in the same folder as this HTML file."
+                    );
+
+                }
+            );
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
